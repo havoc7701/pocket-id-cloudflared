@@ -27,7 +27,7 @@ services:
       timeout: 5s
       retries: 2
       start_period: 10s
-  # Optional containrrr/watchtower container to automatically update Docker base images. NOTE: Deprecated project as of 12/17/25
+  # Optional nickfedor/watchtower container to automatically update Docker base images.
   watchtower:
     image: nickfedor/watchtower:latest
     container_name: watchtower
