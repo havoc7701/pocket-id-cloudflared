@@ -1,34 +1,38 @@
 services:
-  # Cloudflare Tunnel to allow secure hosting of PocketID behind Cloudflare with WAF + reverse proxy and no inbound firewalls rules required
   cloudflared:
+    # Cloudflare Tunnel to allow secure hosting of PocketID behind Cloudflare with WAF + reverse proxy and no inbound firewalls rules required
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
+    # Logging options limit the size of Cf Tunnel logs
     logging:
       options:
         max-size: "5m"
         max-file: "3"
     restart: unless-stopped
     command: tunnel run
+    # Replace your own Cloudflare Dash specific tunnel token value over <PasteTokenHere> making sure to paste over <> brackets
     environment:
-      - TUNNEL_TOKEN=<Cloudflare-Tunnel-Token-from-Dashboard>
+      - TUNNEL_TOKEN=<PasteTokenHere>
   pocket-id:
+    # Pocket-ID v2 is the latest version
     image: ghcr.io/pocket-id/pocket-id:v2
     container_name: pocket-id
     restart: unless-stopped
+    # Make sure to edit .env file values per guide: https://pocket-id.org/docs/configuration/environment-variables
     env_file: .env
     ports:
       - 1411:1411
     volumes:
       - "./data:/app/data"
-    # Optional healthcheck built-into Pocket-ID
+    # Optional healthcheck in Pocket-ID
     healthcheck:
       test: [ "CMD", "/app/pocket-id", "healthcheck" ]
       interval: 1m30s
       timeout: 5s
       retries: 2
       start_period: 10s
-  # Optional nickfedor/watchtower container to automatically update Docker base images.
   watchtower:
+    # Watchtower is a container that automatically downloads and updates Docker images cleanup of up old images enabled. Not recommended for production!
     image: nickfedor/watchtower:latest
     container_name: watchtower
     restart: always
