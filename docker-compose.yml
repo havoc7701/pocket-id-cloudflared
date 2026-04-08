@@ -33,7 +33,6 @@ services:
     container_name: watchtower
     restart: always
     environment:
-      - DOCKER_API_VERSION=1.44
       - WATCHTOWER_CLEANUP=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
